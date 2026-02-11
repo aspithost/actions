@@ -37,7 +37,7 @@ jobs:
         if: steps.local.outputs.version != steps.remote.outputs.version
         uses: actions/setup-node@v6
         with:
-          registry-url: https://registry.npmjs.org
+          node-version: 24
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
