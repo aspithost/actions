@@ -1,0 +1,28 @@
+name: Create tag
+description: Creates a git tag based on the package name and version
+
+inputs:
+  package-name:
+    description: Name of the package
+    required: true
+  package-version:
+    description: Version of the package
+    required: true
+
+outputs:
+  tag:
+    description: The created tag name
+    value: ${{ steps.tag.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create and push tag
+      id: tag
+      shell: bash
+      env:
+        TAG: ${{ inputs.package-name }}@${{ inputs.package-version }}
+      run: |
+        echo "result=$TAG" >> "$GITHUB_OUTPUT"
+        git tag "$TAG"
+        git push origin "$TAG"

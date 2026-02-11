@@ -1,0 +1,89 @@
+name: Release
+description: Publishes a package to NPM and creates and pushes a new tag
+
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: The path to the package directory
+        required: true
+        type: string
+    secrets:
+      npm-token:
+        description: NPM access token to publish the package
+        required: true
+
+jobs:
+  get-local-package-information:
+    runs-on: ubuntu-latest
+    name: Get local package information
+
+    outputs:
+      name: ${{ steps.local-pkg-version.outputs.name }}
+      version: ${{ steps.local-pkg-version.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Get Package Information
+        id: local-pkg-version
+        uses: aspithost/actions/npm/get-local-package-information@v0
+        with:
+          working-directory: ${{ inputs.package-path }}
+
+  get-remote-package-version:
+    runs-on: ubuntu-latest
+    name: Get Remote Package Version
+
+    needs: get-local-package-information
+
+    outputs:
+      version: ${{ steps.remote-pkg-version.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Get remote version
+        id: remote-pkg-version
+        uses: aspithost/actions/npm/get-remote-package-version@v0
+        with:
+          package-name: ${{ needs.get-local-package-information.outputs.name }}
+
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish to npm
+    needs: [get-local-package-information, get-remote-package-version]
+    if: needs.get-local-package-information.outputs.version != needs.get-remote-package-version.outputs.version
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish package
+        uses: aspithost/actions/npm/publish@v0
+        with:
+          package-path: ${{ inputs.package-path }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
+
+  create-and-push-tag:
+    runs-on: ubuntu-latest
+    name: Create and push tag
+    needs: [get-local-package-information, get-remote-package-version, publish]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Create and push tag
+        uses: aspithost/actions/git/create-and-push-tag@v0
+        with:
+          package-name: ${{ needs.get-local-package-information.outputs.name }}
+          package-version: ${{ needs.get-local-package-information.outputs.version }}

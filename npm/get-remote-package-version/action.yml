@@ -1,0 +1,23 @@
+name: Get remote package.json version
+description: Retrieves semantic version from remote repository
+
+inputs:
+  package-name:
+    description: The npm package name to look up
+    required: true
+
+outputs:
+  version:
+    description: The remote package version
+    value: ${{ steps.version.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read version
+      id: version
+      shell: bash
+      run: |
+        set +e
+        version=$(npm view '${{ inputs.package-name }}' version)
+        echo "result=$version" >> "$GITHUB_OUTPUT"
