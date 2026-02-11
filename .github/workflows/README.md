@@ -2,12 +2,12 @@
 
 Reusable workflow that publishes a package to npm and creates a git tag, only when the local version differs from the published version.
 
-## Jobs
+## Steps
 
-1. **Get local package information** - Reads `name` and `version` from the local `package.json`
-2. **Get remote package version** - Fetches the currently published version from npm
-3. **Publish to npm** - Publishes the package if versions differ
-4. **Create and push tag** - Creates and pushes a `<name>@<version>` git tag after publishing
+1. Reads `name` and `version` from the local `package.json`
+2. Fetches the currently published version from npm
+3. Publishes the package if versions differ
+4. Creates and pushes a `<name>@<version>` git tag
 
 ## Usage
 
