@@ -1,0 +1,29 @@
+# Used to version this repository
+name: Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag-name:
+        description: New semver tag name
+        required: true
+        type: string
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Create and push tag
+        uses: ./git/create-and-push-tag
+        env:
+          tag: ${{ inputs.tag-name }}
+
+      - name: Create and push rolling
+        uses: ./git/create-and-push-rolling-tags
+        env:
+          tag: ${{ inputs.tag-name }}

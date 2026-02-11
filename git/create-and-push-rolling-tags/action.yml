@@ -1,0 +1,22 @@
+name: Update version tags
+description: Creates and force-pushes major and minor version tags from a semver tag
+
+inputs:
+  tag:
+    description: The semver tag (e.g. v1.2.3)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Update version tags
+      shell: bash
+      env:
+        TAG: ${{ inputs.tag }}
+      run: |
+        MAJOR="${TAG%%.*}"
+        MINOR="${TAG%.*}"
+
+        git tag -f "$MAJOR"
+        git tag -f "$MINOR"
+        git push origin "$MAJOR" "$MINOR" --force
