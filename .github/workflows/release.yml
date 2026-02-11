@@ -1,5 +1,4 @@
 name: Release
-description: Publishes a package to NPM and creates and pushes a new tag
 
 on:
   workflow_call:
@@ -27,13 +26,13 @@ jobs:
 
       - name: Get local package information
         id: local
-        uses: aspithost/actions/npm/get-local-package-information@v0
+        uses: aspithost/actions/npm/get-local-package-information
         with:
           working-directory: ${{ inputs.package-path }}
 
       - name: Get remote package version
         id: remote
-        uses: aspithost/actions/npm/get-remote-package-version@v0
+        uses: aspithost/actions/npm/get-remote-package-version
         with:
           package-name: ${{ steps.local.outputs.name }}
 
@@ -45,7 +44,7 @@ jobs:
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/npm/publish@v0
+        uses: aspithost/actions/npm/publish
         with:
           package-path: ${{ inputs.package-path }}
         env:
@@ -53,6 +52,6 @@ jobs:
 
       - name: Create and push tag
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/git/create-and-push-tag@v0
+        uses: aspithost/actions/git/create-and-push-tag
         with:
           tag: ${{ steps.local.outputs.name }}@${{ steps.local.outputs.version }}
