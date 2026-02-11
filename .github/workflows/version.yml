@@ -18,12 +18,15 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
       - name: Create and push tag
         uses: ./git/create-and-push-tag
-        env:
+        with:
           tag: ${{ inputs.tag-name }}
 
-      - name: Create and push rolling
+      - name: Create and push rolling tags
         uses: ./git/create-and-push-rolling-tags
-        env:
+        with:
           tag: ${{ inputs.tag-name }}
