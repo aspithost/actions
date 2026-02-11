@@ -55,5 +55,4 @@ jobs:
         if: steps.local.outputs.version != steps.remote.outputs.version
         uses: aspithost/actions/git/create-and-push-tag@v0
         with:
-          package-name: ${{ steps.local.outputs.name }}
-          package-version: ${{ steps.local.outputs.version }}
+          tag: ${{ steps.local.outputs.name }}@${{ steps.local.outputs.version }}
