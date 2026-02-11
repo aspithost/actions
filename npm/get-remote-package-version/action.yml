@@ -17,7 +17,9 @@ runs:
     - name: Read version
       id: version
       shell: bash
+      env:
+        PACKAGE_NAME: ${{ inputs.package-name }}
       run: |
         set +e
-        version=$(npm view '${{ inputs.package-name }}' version)
+        version=$(npm view "$PACKAGE_NAME" version)
         echo "result=$version" >> "$GITHUB_OUTPUT"
