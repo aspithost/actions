@@ -12,4 +12,4 @@ runs:
     - name: Publish package
       working-directory: ${{ inputs.package-path }}
       shell: bash
-      run: npm publish --access public
+      run: npm publish --access public --provenance

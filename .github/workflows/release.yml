@@ -7,10 +7,6 @@ on:
         description: The path to the package directory
         required: true
         type: string
-    secrets:
-      npm-token:
-        description: NPM access token to publish the package
-        required: true
 
 jobs:
   release:
@@ -19,6 +15,7 @@ jobs:
 
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -47,8 +44,6 @@ jobs:
         uses: aspithost/actions/npm/publish@v0
         with:
           package-path: ${{ inputs.package-path }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
 
       - name: Create and push tag
         if: steps.local.outputs.version != steps.remote.outputs.version

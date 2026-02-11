@@ -1,6 +1,6 @@
 # Publish to npm
 
-Publishes an npm package to the registry with public access.
+Publishes an npm package to the registry with public access. This action only supports [trusted publishing](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions) (OIDC provenance) and does not accept an npm token.
 
 ## Inputs
 
@@ -18,12 +18,10 @@ Publishes an npm package to the registry with public access.
 - uses: ./npm/publish
   with:
     package-path: ./my-package
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
 ## Requirements
 
 - Node.js and npm available on the runner
-- `NODE_AUTH_TOKEN` set in the environment for npm registry authentication
 - `setup-node` with `registry-url` configured prior to this step
+- `id-token: write` permission on the job for npm trusted publishing (OIDC provenance)
