@@ -7,6 +7,10 @@ on:
         description: The path to the package directory
         required: true
         type: string
+      artifact-name:
+        description: Name of the build artifact to download
+        required: false
+        type: string
 
 jobs:
   release:
@@ -38,6 +42,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+
+      - name: Download build artifact
+        if: inputs.artifact-name != '' && steps.local.outputs.version != steps.remote.outputs.version
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.package-path }}/dist
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
