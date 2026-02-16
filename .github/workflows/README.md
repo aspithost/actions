@@ -9,7 +9,8 @@ Reusable workflow that builds a TypeScript project. Supports npm, pnpm, yarn, an
 3. Installs dependencies using a lockfile
 4. Runs linting
 5. Runs the build
-6. Optionally uploads the build output as an artifact
+6. Optionally runs test commands
+7. Optionally uploads the build output as an artifact
 
 ## Usage
 
@@ -36,6 +37,18 @@ jobs:
       upload-artifact: true
 ```
 
+With tests:
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+    with:
+      test-commands: |
+        npm run test:unit
+        npm run test:e2e
+```
+
 ## Inputs
 
 | Name | Description | Default |
@@ -44,6 +57,7 @@ jobs:
 | `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
 | `lint-command` | Command to run for linting | `npm run lint` |
 | `build-command` | Command to run for building | `npm run build` |
+| `test-commands` | Commands to run tests, one per line (skipped if empty) | `''` |
 | `upload-artifact` | Upload the build output as an artifact | `false` |
 | `artifact-name` | Name of the uploaded artifact | `dist` |
 | `artifact-path` | Path to upload as artifact | `dist/` |
