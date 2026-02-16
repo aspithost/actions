@@ -1,6 +1,6 @@
-# Build Workflow
+# Build Node Workflow
 
-Reusable workflow that builds a TypeScript project. Supports npm, pnpm, yarn, and bun.
+Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and bun.
 
 ## Steps
 
@@ -22,7 +22,7 @@ on:
 
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v0
 ```
 
 With custom options:
@@ -30,7 +30,7 @@ With custom options:
 ```yaml
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v0
     with:
       package-manager: pnpm
       node-version: '22'
@@ -42,7 +42,7 @@ With tests:
 ```yaml
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v0
     with:
       test-commands: |
         npm run test:unit
