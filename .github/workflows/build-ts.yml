@@ -1,0 +1,85 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node.js version to use
+        required: false
+        type: string
+        default: '24'
+      package-manager:
+        description: Package manager to use (npm, pnpm, yarn, or bun)
+        required: false
+        type: string
+        default: npm
+      lint-command:
+        description: Command to run for linting
+        required: false
+        type: string
+        default: npm run lint
+      build-command:
+        description: Command to run for building
+        required: false
+        type: string
+        default: npm run build
+      upload-artifact:
+        description: Upload the dist folder as an artifact
+        required: false
+        type: boolean
+        default: false
+      artifact-name:
+        description: Name of the uploaded artifact
+        required: false
+        type: string
+        default: dist
+      artifact-path:
+        description: Path to upload as artifact
+        required: false
+        type: string
+        default: dist/
+      artifact-retention-days:
+        description: Number of days to retain the artifact
+        required: false
+        type: number
+        default: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Bun
+        if: inputs.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Node.js
+        if: inputs.package-manager != 'bun'
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+
+      - name: Install dependencies
+        run: ${{ inputs.package-manager }} ${{ inputs.package-manager == 'npm' && 'ci' || 'install --frozen-lockfile' }}
+
+      - name: Lint
+        run: ${{ inputs.lint-command }}
+
+      - name: Build
+        run: ${{ inputs.build-command }}
+
+      - name: Upload dist
+        if: inputs.upload-artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.artifact-path }}
+          retention-days: ${{ inputs.artifact-retention-days }}
