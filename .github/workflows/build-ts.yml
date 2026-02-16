@@ -23,6 +23,11 @@ on:
         required: false
         type: string
         default: npm run build
+      test-commands:
+        description: Commands to run tests, one per line (skipped if empty)
+        required: false
+        type: string
+        default: ''
       upload-artifact:
         description: Upload the dist folder as an artifact
         required: false
@@ -75,6 +80,10 @@ jobs:
 
       - name: Build
         run: ${{ inputs.build-command }}
+
+      - name: Test
+        if: inputs.test-commands != ''
+        run: ${{ inputs.test-commands }}
 
       - name: Upload dist
         if: inputs.upload-artifact
