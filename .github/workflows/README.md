@@ -22,7 +22,7 @@ on:
 
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-node.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
 ```
 
 With custom options:
@@ -30,7 +30,7 @@ With custom options:
 ```yaml
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-node.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
       package-manager: pnpm
       node-version: '22'
@@ -42,7 +42,7 @@ With tests:
 ```yaml
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-node.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
       test-commands: |
         npm run test:unit
@@ -92,7 +92,7 @@ permissions:
 
 jobs:
   release:
-    uses: aspithost/actions/.github/workflows/release-npm.yml@v0
+    uses: aspithost/actions/.github/workflows/release-npm.yml@v1
     with:
       package-path: ./my-package
 ```
@@ -102,7 +102,7 @@ With a build artifact:
 ```yaml
 jobs:
   release:
-    uses: aspithost/actions/.github/workflows/release-npm.yml@v0
+    uses: aspithost/actions/.github/workflows/release-npm.yml@v1
     with:
       package-path: ./my-package
       artifact-name: dist

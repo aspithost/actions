@@ -38,13 +38,13 @@ jobs:
 
       - name: Get local package information
         id: local
-        uses: aspithost/actions/npm/get-local-package-information@v0
+        uses: aspithost/actions/npm/get-local-package-information@v1
         with:
           working-directory: ${{ inputs.package-path }}
 
       - name: Get remote package version
         id: remote
-        uses: aspithost/actions/npm/get-remote-package-version@v0
+        uses: aspithost/actions/npm/get-remote-package-version@v1
         with:
           package-name: ${{ steps.local.outputs.name }}
 
@@ -63,12 +63,12 @@ jobs:
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/npm/publish@v0
+        uses: aspithost/actions/npm/publish@v1
         with:
           package-path: ${{ inputs.package-path }}
 
       - name: Create and push tag
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/git/create-and-push-tag@v0
+        uses: aspithost/actions/git/create-and-push-tag@v1
         with:
           tag: ${{ steps.local.outputs.name }}@${{ steps.local.outputs.version }}

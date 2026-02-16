@@ -11,7 +11,7 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 ```yaml
 jobs:
   build:
-    uses: aspithost/actions/.github/workflows/build-node.yml@v0
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
 ```
 
 ### Release NPM
@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   release:
-    uses: aspithost/actions/.github/workflows/release-npm.yml@v0
+    uses: aspithost/actions/.github/workflows/release-npm.yml@v1
     with:
       package-path: ./my-package
 ```
