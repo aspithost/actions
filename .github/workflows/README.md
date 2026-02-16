@@ -1,3 +1,56 @@
+# Build Workflow
+
+Reusable workflow that builds a TypeScript project. Supports npm, pnpm, yarn, and bun.
+
+## Steps
+
+1. Checks out the repository
+2. Sets up the package manager and Node.js (or Bun)
+3. Installs dependencies using a lockfile
+4. Runs linting
+5. Runs the build
+6. Optionally uploads the build output as an artifact
+
+## Usage
+
+```yaml
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+```
+
+With custom options:
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-ts.yml@v0
+    with:
+      package-manager: pnpm
+      node-version: '22'
+      upload-artifact: true
+```
+
+## Inputs
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `node-version` | Node.js version to use | `24` |
+| `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
+| `lint-command` | Command to run for linting | `npm run lint` |
+| `build-command` | Command to run for building | `npm run build` |
+| `upload-artifact` | Upload the build output as an artifact | `false` |
+| `artifact-name` | Name of the uploaded artifact | `dist` |
+| `artifact-path` | Path to upload as artifact | `dist/` |
+| `artifact-retention-days` | Number of days to retain the artifact | `1` |
+
+---
+
 # Release Workflow
 
 Reusable workflow that publishes a package to npm and creates a git tag, only when the local version differs from the published version.
