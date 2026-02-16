@@ -1,4 +1,4 @@
-name: Build
+name: Build Node
 
 on:
   workflow_call:

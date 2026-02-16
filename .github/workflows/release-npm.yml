@@ -1,4 +1,4 @@
-name: Release
+name: Release package to NPM
 
 on:
   workflow_call:
@@ -7,10 +7,21 @@ on:
         description: The path to the package directory
         required: true
         type: string
+      node-version:
+        description: Node.js version to use
+        required: false
+        type: string
+        default: '24'
       artifact-name:
         description: Name of the build artifact to download
         required: false
         type: string
+        default: ''
+      artifact-path:
+        description: Path to download the artifact to
+        required: false
+        type: string
+        default: dist
 
 jobs:
   release:
@@ -27,13 +38,13 @@ jobs:
 
       - name: Get local package information
         id: local
-        uses: aspithost/actions/npm/get-local-package-information@v0
+        uses: aspithost/actions/npm/get-local-package-information@v1
         with:
           working-directory: ${{ inputs.package-path }}
 
       - name: Get remote package version
         id: remote
-        uses: aspithost/actions/npm/get-remote-package-version@v0
+        uses: aspithost/actions/npm/get-remote-package-version@v1
         with:
           package-name: ${{ steps.local.outputs.name }}
 
@@ -41,23 +52,23 @@ jobs:
         if: steps.local.outputs.version != steps.remote.outputs.version
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: ${{ inputs.node-version }}
 
       - name: Download build artifact
         if: inputs.artifact-name != '' && steps.local.outputs.version != steps.remote.outputs.version
         uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.package-path }}/dist
+          path: ${{ inputs.package-path }}/${{ inputs.artifact-path }}
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/npm/publish@v0
+        uses: aspithost/actions/npm/publish@v1
         with:
           package-path: ${{ inputs.package-path }}
 
       - name: Create and push tag
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/git/create-and-push-tag@v0
+        uses: aspithost/actions/git/create-and-push-tag@v1
         with:
           tag: ${{ steps.local.outputs.name }}@${{ steps.local.outputs.version }}
