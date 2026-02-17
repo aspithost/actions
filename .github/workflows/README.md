@@ -10,7 +10,8 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 4. Runs linting
 5. Runs the build
 6. Optionally runs test commands
-7. Optionally uploads the build output as an artifact
+7. Optionally runs a SonarQube scan
+8. Optionally uploads the build output as an artifact
 
 ## Usage
 
@@ -49,6 +50,31 @@ jobs:
         npm run test:e2e
 ```
 
+With SonarQube:
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
+    with:
+      run-sonar: true
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
+```
+
+With SonarQube (self-hosted):
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
+    with:
+      run-sonar: true
+      sonar-host-url: https://sonarqube.example.com
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
+```
+
 ## Inputs
 
 | Name | Description | Default |
@@ -62,6 +88,14 @@ jobs:
 | `artifact-name` | Name of the uploaded artifact | `dist` |
 | `artifact-path` | Path to upload as artifact | `dist/` |
 | `artifact-retention-days` | Number of days to retain the artifact | `1` |
+| `run-sonar` | Run a SonarQube scan | `false` |
+| `sonar-host-url` | SonarQube host URL (omit for SonarCloud) | `''` |
+
+## Secrets
+
+| Name | Description | Required |
+| --- | --- | --- |
+| `sonar-token` | SonarQube authentication token | Only when `run-sonar: true` |
 
 ---
 

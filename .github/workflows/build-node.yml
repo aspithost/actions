@@ -48,6 +48,20 @@ on:
         required: false
         type: number
         default: 1
+      run-sonar:
+        description: Run SonarQube scan
+        required: false
+        type: boolean
+        default: false
+      sonar-host-url:
+        description: SonarQube host URL (omit for SonarCloud)
+        required: false
+        type: string
+        default: ''
+    secrets:
+      sonar-token:
+        description: SonarQube authentication token
+        required: false
 
 jobs:
   build:
@@ -87,6 +101,13 @@ jobs:
       - name: Test
         if: inputs.test-commands != ''
         run: ${{ inputs.test-commands }}
+
+      - name: SonarQube Scan
+        if: inputs.run-sonar
+        uses: aspithost/actions/sonar@v1
+        with:
+          sonar-token: ${{ secrets.sonar-token }}
+          sonar-host-url: ${{ inputs.sonar-host-url }}
 
       - name: Upload dist
         if: inputs.upload-artifact
