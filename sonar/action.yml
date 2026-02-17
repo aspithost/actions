@@ -1,0 +1,22 @@
+name: SonarQube scan
+description: Run a SonarQube scan
+
+inputs:
+  sonar-token:
+    description: SonarQube authentication token
+    required: true
+  sonar-host-url:
+    description: SonarQube host URL (omit for SonarCloud)
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - uses: SonarSource/sonarqube-scan-action@v7
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+        SONAR_HOST_URL: ${{ inputs.sonar-host-url }}
