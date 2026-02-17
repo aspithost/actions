@@ -22,6 +22,9 @@ Publishes an npm package to the registry with public access. This action only su
 
 ## Requirements
 
-- Node.js and npm available on the runner
-- `setup-node` with `registry-url` configured prior to this step
-- `id-token: write` permission on the job for npm trusted publishing (OIDC provenance)
+- You need Node.js and npm on the runner
+- Run `setup-node` with `registry-url` before this step
+
+## Permissions
+
+- `id-token: write` — for npm trusted publishing (OIDC provenance)
