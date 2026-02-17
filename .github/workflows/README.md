@@ -119,4 +119,4 @@ jobs:
 
 ## Permissions
 
-The calling workflow must declare `contents: write` and `id-token: write`.
+Your calling workflow must declare `contents: write` and `id-token: write`.
