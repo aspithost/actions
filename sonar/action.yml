@@ -6,8 +6,9 @@ inputs:
     description: SonarQube authentication token
     required: true
   sonar-host-url:
-    description: SonarQube host URL (omit for SonarCloud)
+    description: SonarQube host URL. Defaults to Sonarcloud
     required: false
+    default: https://sonarcloud.io
 
 runs:
   using: composite
