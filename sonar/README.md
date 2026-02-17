@@ -26,6 +26,10 @@ Runs a SonarQube scan using the [SonarSource/sonarqube-scan-action](https://gith
     sonar-host-url: https://sonar.mycompany.com
 ```
 
+## Permissions
+
+- `contents: read` — to check out the repository
+
 ## Notes
 
 - You need a `sonar-project.properties` file in the root of your repository to configure the scan (project key, sources, etc.)

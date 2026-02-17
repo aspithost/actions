@@ -18,4 +18,4 @@ Creates and pushes a git tag to the remote.
 
 ## Permissions
 
-Requires `contents: write` permission on `GITHUB_TOKEN` to push tags.
+Your job needs `contents: write` permission on `GITHUB_TOKEN` to push tags.

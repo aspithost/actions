@@ -28,4 +28,4 @@ Reads the `name` and `version` fields from a local `package.json` file.
 
 ## Requirements
 
-Requires Node.js to be available on the runner.
+You need Node.js on the runner.

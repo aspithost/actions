@@ -27,4 +27,4 @@ Retrieves the latest published version of a package from the npm registry. Retur
 
 ## Requirements
 
-Requires Node.js and npm to be available on the runner.
+You need Node.js and npm on the runner.
