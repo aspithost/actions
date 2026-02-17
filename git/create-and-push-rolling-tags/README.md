@@ -22,4 +22,4 @@ Given `v1.2.3`, this action will create/update:
 
 ## Required permissions
 
-- `contents: write` — needed to force-push tags
+- `contents: write` — to force-push tags

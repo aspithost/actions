@@ -63,3 +63,7 @@ Creates a GitHub release with auto-generated notes.
 ### semver/bump
 
 Calculates the next semantic version based on a bump type (major, minor, or patch).
+
+### sonar-cloud
+
+Runs a SonarQube scan. Supports both SonarCloud and self-hosted SonarQube.
