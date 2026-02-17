@@ -57,7 +57,7 @@ on:
         description: SonarQube host URL (omit for SonarCloud)
         required: false
         type: string
-        default: ''
+        default: https://sonarcloud.io
     secrets:
       sonar-token:
         description: SonarQube authentication token
