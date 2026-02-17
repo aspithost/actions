@@ -62,7 +62,7 @@ jobs:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
 
-With SonarQube (self-hosted):
+With a self-hosted SonarQube instance:
 
 ```yaml
 jobs:
@@ -89,7 +89,7 @@ jobs:
 | `artifact-path` | Path to upload as artifact | `dist/` |
 | `artifact-retention-days` | Number of days to retain the artifact | `1` |
 | `run-sonar` | Run a SonarQube scan | `false` |
-| `sonar-host-url` | SonarQube host URL (omit for SonarCloud) | `''` |
+| `sonar-host-url` | SonarQube host URL | `https://sonarcloud.io` |
 
 ## Secrets
 

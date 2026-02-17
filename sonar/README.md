@@ -7,7 +7,7 @@ Runs a SonarQube scan using the [SonarSource/sonarqube-scan-action](https://gith
 | Input | Required | Description |
 |---|---|---|
 | `sonar-token` | Yes | SonarQube authentication token |
-| `sonar-host-url` | No | SonarQube host URL. Omit for SonarCloud |
+| `sonar-host-url` | No | SonarQube host URL. Defaults to `https://sonarcloud.io` |
 
 ## Usage
 
