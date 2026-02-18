@@ -10,8 +10,9 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 4. Runs linting
 5. Runs the build
 6. Optionally runs test commands
-7. Optionally runs a SonarQube scan
-8. Optionally uploads the build output as an artifact
+7. Audits dependencies for vulnerabilities (npm, pnpm, and yarn; skipped for bun)
+8. Optionally runs a SonarQube scan
+9. Optionally uploads the build output as an artifact
 
 ## Usage
 
@@ -48,6 +49,16 @@ jobs:
       test-commands: |
         npm run test:unit
         npm run test:e2e
+```
+
+With audit disabled:
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
+    with:
+      run-audit: false
 ```
 
 With SonarQube:
@@ -88,6 +99,7 @@ jobs:
 | `artifact-name` | Name of the uploaded artifact | `dist` |
 | `artifact-path` | Path to upload as artifact | `dist/` |
 | `artifact-retention-days` | Number of days to retain the artifact | `1` |
+| `run-audit` | Audit dependencies for vulnerabilities (skipped for bun) | `true` |
 | `run-sonar` | Run a SonarQube scan | `false` |
 | `sonar-host-url` | SonarQube host URL | `https://sonarcloud.io` |
 
