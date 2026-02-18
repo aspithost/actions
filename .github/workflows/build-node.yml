@@ -14,20 +14,25 @@ on:
         type: string
         default: npm
       lint-command:
-        description: Command to run for linting
+        description: Command to run for linting, one per line (skipped if empty)
         required: false
         type: string
         default: npm run lint
       build-command:
-        description: Command to run for building
+        description: Command to run for building, one per line (skipped if empty)
         required: false
         type: string
         default: npm run build
-      test-commands:
-        description: Commands to run tests, one per line (skipped if empty)
+      test-command:
+        description: Command to run tests, one per line (skipped if empty)
         required: false
         type: string
         default: ''
+      audit-command:
+        description: Command to run for auditing dependencies, one per line (skipped if empty). Defaults to NPM audit
+        required: false
+        type: string
+        default: npm audit --audit-level=critical
       upload-artifact:
         description: Upload the dist folder as an artifact
         required: false
@@ -48,11 +53,6 @@ on:
         required: false
         type: number
         default: 1
-      run-audit:
-        description: Run dependency vulnerability audit (supported for npm, pnpm, and yarn)
-        required: false
-        type: boolean
-        default: true
       run-sonar:
         description: Run SonarQube scan
         required: false
@@ -98,18 +98,20 @@ jobs:
         run: ${{ inputs.package-manager }} ${{ inputs.package-manager == 'npm' && 'ci' || 'install --frozen-lockfile' }}
 
       - name: Lint
+        if: inputs.lint-command != ''
         run: ${{ inputs.lint-command }}
 
       - name: Build
+        if: inputs.build-command != ''
         run: ${{ inputs.build-command }}
 
       - name: Test
-        if: inputs.test-commands != ''
-        run: ${{ inputs.test-commands }}
+        if: inputs.test-command != ''
+        run: ${{ inputs.test-command }}
 
       - name: Audit dependencies
-        if: inputs.run-audit && inputs.package-manager != 'bun'
-        run: ${{ inputs.package-manager }} audit
+        if: inputs.audit-command != ''
+        run: ${{ inputs.audit-command }}
 
       - name: SonarQube Scan
         if: inputs.run-sonar
