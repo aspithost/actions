@@ -48,6 +48,11 @@ on:
         required: false
         type: number
         default: 1
+      run-audit:
+        description: Run dependency vulnerability audit (supported for npm, pnpm, and yarn)
+        required: false
+        type: boolean
+        default: true
       run-sonar:
         description: Run SonarQube scan
         required: false
@@ -101,6 +106,10 @@ jobs:
       - name: Test
         if: inputs.test-commands != ''
         run: ${{ inputs.test-commands }}
+
+      - name: Audit dependencies
+        if: inputs.run-audit && inputs.package-manager != 'bun'
+        run: ${{ inputs.package-manager }} audit
 
       - name: SonarQube Scan
         if: inputs.run-sonar
