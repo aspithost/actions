@@ -7,10 +7,10 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 1. Checks out the repository
 2. Sets up the package manager and Node.js (or Bun)
 3. Installs dependencies using a lockfile
-4. Runs linting
-5. Runs the build
-6. Optionally runs test commands
-7. Audits dependencies for vulnerabilities (npm, pnpm, and yarn; skipped for bun)
+4. Optionally runs linting (skipped if `lint-command` is empty)
+5. Optionally runs the build (skipped if `build-command` is empty)
+6. Optionally runs tests (skipped if `test-command` is empty)
+7. Optionally audits dependencies (skipped if `audit-command` is empty)
 8. Optionally runs a SonarQube scan
 9. Optionally uploads the build output as an artifact
 
@@ -46,9 +46,7 @@ jobs:
   build:
     uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
-      test-commands: |
-        npm run test:unit
-        npm run test:e2e
+      test-command: npm run test
 ```
 
 With audit disabled:
@@ -58,7 +56,7 @@ jobs:
   build:
     uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
-      run-audit: false
+      audit-command: ''
 ```
 
 With SonarQube:
@@ -92,14 +90,14 @@ jobs:
 | --- | --- | --- |
 | `node-version` | Node.js version to use | `24` |
 | `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
-| `lint-command` | Command to run for linting | `npm run lint` |
-| `build-command` | Command to run for building | `npm run build` |
-| `test-commands` | Commands to run tests, one per line (skipped if empty) | `''` |
+| `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
+| `build-command` | Command to run for building (skipped if empty) | `npm run build` |
+| `test-command` | Command to run tests (skipped if empty) | `''` |
+| `audit-command` | Command to audit dependencies (skipped if empty) | `npm audit --audit-level=critical` |
 | `upload-artifact` | Upload the build output as an artifact | `false` |
 | `artifact-name` | Name of the uploaded artifact | `dist` |
 | `artifact-path` | Path to upload as artifact | `dist/` |
 | `artifact-retention-days` | Number of days to retain the artifact | `1` |
-| `run-audit` | Audit dependencies for vulnerabilities (skipped for bun) | `true` |
 | `run-sonar` | Run a SonarQube scan | `false` |
 | `sonar-host-url` | SonarQube host URL | `https://sonarcloud.io` |
 
