@@ -1,6 +1,6 @@
 # Build Node Workflow
 
-Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and bun.
+Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and bun. Defaults to npm and npm scripts.
 
 ## Steps
 
@@ -90,8 +90,8 @@ jobs:
 | --- | --- | --- |
 | `node-version` | Node.js version to use | `24` |
 | `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
-| `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
 | `build-command` | Command to run for building (skipped if empty) | `npm run build` |
+| `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
 | `test-command` | Command to run tests (skipped if empty) | `''` |
 | `audit-command` | Command to audit dependencies (skipped if empty) | `npm audit --audit-level=critical` |
 | `upload-artifact` | Upload the build output as an artifact | `false` |
