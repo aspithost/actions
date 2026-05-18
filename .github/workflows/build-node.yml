@@ -13,16 +13,16 @@ on:
         required: false
         type: string
         default: npm
-      lint-command:
-        description: Command to run for linting, one per line (skipped if empty)
-        required: false
-        type: string
-        default: npm run lint
       build-command:
         description: Command to run for building, one per line (skipped if empty)
         required: false
         type: string
         default: npm run build
+      lint-command:
+        description: Command to run for linting, one per line (skipped if empty)
+        required: false
+        type: string
+        default: npm run lint
       test-command:
         description: Command to run tests, one per line (skipped if empty)
         required: false
@@ -97,13 +97,13 @@ jobs:
       - name: Install dependencies
         run: ${{ inputs.package-manager }} ${{ inputs.package-manager == 'npm' && 'ci' || 'install --frozen-lockfile' }}
 
-      - name: Lint
-        if: inputs.lint-command != ''
-        run: ${{ inputs.lint-command }}
-
       - name: Build
         if: inputs.build-command != ''
         run: ${{ inputs.build-command }}
+
+      - name: Lint
+        if: inputs.lint-command != ''
+        run: ${{ inputs.lint-command }}
 
       - name: Test
         if: inputs.test-command != ''
