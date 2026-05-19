@@ -33,6 +33,10 @@ on:
         required: false
         type: string
         default: ''
+      generate-vitest-coverage-report:
+        description: Generate a Vitest coverage report
+        required: false
+        type: boolean
       audit-command:
         description: Command to run for auditing dependencies, one per line (skipped if empty). Defaults to NPM audit
         required: false
@@ -79,6 +83,8 @@ jobs:
 
     permissions:
       contents: read
+      # Required to put a comment in the PR by Vitest Coverage report
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -117,6 +123,10 @@ jobs:
       - name: Test
         if: inputs.test-command != ''
         run: ${{ inputs.test-command }}
+
+      - name: Vitest coverage report
+        if: inputs.generate-vitest-coverage-report
+        uses:  davelosert/vitest-coverage-report-action@v2
 
       - name: Audit dependencies
         if: inputs.audit-command != ''
