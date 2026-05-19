@@ -11,9 +11,11 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 5. Optionally runs the build (skipped if `build-command` is empty)
 6. Optionally runs linting (skipped if `lint-command` is empty)
 7. Optionally runs tests (skipped if `test-command` is empty)
-8. Optionally audits dependencies (skipped if `audit-command` is empty)
-9. Optionally runs a SonarQube scan
-10. Optionally uploads the build output as an artifact
+8. Optionally generates a Vitest coverage report
+9. Optionally audits dependencies (skipped if `audit-command` is empty)
+10. Optionally runs a SonarQube scan
+11. Optionally uploads the build output as an artifact
+
 ## Usage
  
 ```yaml
@@ -47,6 +49,19 @@ jobs:
     uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
       test-command: npm run test
+```
+
+With Vitest coverage report:
+
+NOTE: expects your Vitest config to contain `test.coverage.reporter: ['json-summary', 'json']` and `test.coveragereportOnFailure: true`.
+
+```yaml
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
+    with:
+      test-command: npx vitest --coverage
+      generate-vitest-coverage-report: true
 ```
  
 With audit disabled:
@@ -94,6 +109,7 @@ jobs:
 | `build-command` | Command to run for building (skipped if empty) | `npm run build` |
 | `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
 | `test-command` | Command to run tests (skipped if empty) | `''` |
+| `generate-vitest-coverage-report` | Generate a Vitest coverage report | `false` |
 | `audit-command` | Command to audit dependencies (skipped if empty) | `npm audit --audit-level=critical` |
 | `upload-artifact` | Upload the build output as an artifact | `false` |
 | `artifact-name` | Name of the uploaded artifact | `dist` |
@@ -121,6 +137,7 @@ Reusable workflow that publishes a package to npm and creates a git tag, only wh
 3. Optionally downloads a build artifact
 4. Publishes the package if versions differ
 5. Creates and pushes a `<name>@<version>` git tag
+
 ## Usage
  
 ```yaml
