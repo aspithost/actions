@@ -8,6 +8,11 @@ on:
         required: false
         type: string
         default: '24'
+      run-dependency-review:
+        description: Boolean value to run a dependency review action
+        required: false
+        type: boolean
+        default: true
       package-manager:
         description: Package manager to use (npm, pnpm, yarn, or bun)
         required: false
@@ -78,6 +83,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Dependency review
+        if: inputs.run-dependency-review
+        uses: actions/dependency-review-action@v5
 
       - name: Setup pnpm
         if: inputs.package-manager == 'pnpm'

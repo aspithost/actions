@@ -1,34 +1,34 @@
 # Build Node Workflow
-
+ 
 Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and bun. Defaults to npm and npm scripts.
-
+ 
 ## Steps
-
+ 
 1. Checks out the repository
-2. Sets up the package manager and Node.js (or Bun)
-3. Installs dependencies using a lockfile
-4. Optionally runs linting (skipped if `lint-command` is empty)
+2. Optionally runs a dependency review
+3. Sets up the package manager and Node.js (or Bun)
+4. Installs dependencies using a lockfile
 5. Optionally runs the build (skipped if `build-command` is empty)
-6. Optionally runs tests (skipped if `test-command` is empty)
-7. Optionally audits dependencies (skipped if `audit-command` is empty)
-8. Optionally runs a SonarQube scan
-9. Optionally uploads the build output as an artifact
-
+6. Optionally runs linting (skipped if `lint-command` is empty)
+7. Optionally runs tests (skipped if `test-command` is empty)
+8. Optionally audits dependencies (skipped if `audit-command` is empty)
+9. Optionally runs a SonarQube scan
+10. Optionally uploads the build output as an artifact
 ## Usage
-
+ 
 ```yaml
 name: CI
-
+ 
 on:
   pull_request:
-
+ 
 jobs:
   build:
     uses: aspithost/actions/.github/workflows/build-node.yml@v1
 ```
-
+ 
 With custom options:
-
+ 
 ```yaml
 jobs:
   build:
@@ -38,9 +38,9 @@ jobs:
       node-version: '22'
       upload-artifact: true
 ```
-
+ 
 With tests:
-
+ 
 ```yaml
 jobs:
   build:
@@ -48,9 +48,9 @@ jobs:
     with:
       test-command: npm run test
 ```
-
+ 
 With audit disabled:
-
+ 
 ```yaml
 jobs:
   build:
@@ -58,9 +58,9 @@ jobs:
     with:
       audit-command: ''
 ```
-
+ 
 With SonarQube:
-
+ 
 ```yaml
 jobs:
   build:
@@ -70,9 +70,9 @@ jobs:
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
-
+ 
 With a self-hosted SonarQube instance:
-
+ 
 ```yaml
 jobs:
   build:
@@ -83,12 +83,13 @@ jobs:
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
-
+ 
 ## Inputs
-
+ 
 | Name | Description | Default |
 | --- | --- | --- |
 | `node-version` | Node.js version to use | `24` |
+| `run-dependency-review` | Run the dependency review action | `true` |
 | `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
 | `build-command` | Command to run for building (skipped if empty) | `npm run build` |
 | `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
@@ -100,49 +101,48 @@ jobs:
 | `artifact-retention-days` | Number of days to retain the artifact | `1` |
 | `run-sonar` | Run a SonarQube scan | `false` |
 | `sonar-host-url` | SonarQube host URL | `https://sonarcloud.io` |
-
+ 
 ## Secrets
-
+ 
 | Name | Description | Required |
 | --- | --- | --- |
 | `sonar-token` | SonarQube authentication token | Only when `run-sonar: true` |
-
+ 
 ---
-
+ 
 # Release NPM Workflow
-
+ 
 Reusable workflow that publishes a package to npm and creates a git tag, only when the local version differs from the published version. Uses npm trusted publishing (id-token) instead of an explicit npm token.
-
+ 
 ## Steps
-
+ 
 1. Reads `name` and `version` from the local `package.json`
 2. Fetches the currently published version from npm
 3. Optionally downloads a build artifact
 4. Publishes the package if versions differ
 5. Creates and pushes a `<name>@<version>` git tag
-
 ## Usage
-
+ 
 ```yaml
 name: Release
-
+ 
 on:
   push:
     branches: [main]
-
+ 
 permissions:
   contents: write
   id-token: write
-
+ 
 jobs:
   release:
     uses: aspithost/actions/.github/workflows/release-npm.yml@v1
     with:
       package-path: ./my-package
 ```
-
+ 
 With a build artifact:
-
+ 
 ```yaml
 jobs:
   release:
@@ -151,16 +151,16 @@ jobs:
       package-path: ./my-package
       artifact-name: dist
 ```
-
+ 
 ## Inputs
-
+ 
 | Name | Description | Required | Default |
 | --- | --- | --- | --- |
 | `package-path` | The path to the package directory | Yes | |
 | `node-version` | Node.js version to use | No | `24` |
 | `artifact-name` | Name of the build artifact to download | No | `''` |
 | `artifact-path` | Path to download the artifact to | No | `dist` |
-
+ 
 ## Permissions
-
+ 
 Your calling workflow must declare `contents: write` and `id-token: write`.
