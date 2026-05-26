@@ -9,7 +9,7 @@ on:
         type: string
         default: '24'
       run-dependency-review:
-        description: Boolean value to run a dependency review action
+        description: Boolean value to run a dependency review action (only valid on pull_request events)
         required: false
         type: boolean
         default: true
@@ -89,7 +89,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Dependency review
-        if: inputs.run-dependency-review
+        if: inputs.run-dependency-review && github.event_name == 'pull_request'
         uses: actions/dependency-review-action@v5
 
       - name: Setup pnpm
