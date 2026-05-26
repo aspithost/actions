@@ -33,8 +33,8 @@ on:
         required: false
         type: string
         default: ''
-      generate-vitest-coverage-report:
-        description: Generate a Vitest coverage report
+      upload-vitest-coverage-report:
+        description: Upload a Vitest coverage report
         required: false
         type: boolean
       audit-command:
@@ -123,11 +123,12 @@ jobs:
         run: ${{ inputs.test-command }}
       
       - name: Upload Vitest coverage report
-        if: inputs.generate-vitest-coverage-report
+        if: inputs.upload-vitest-coverage-report
         uses: actions/upload-artifact@v7
         with:
           name: vitest-coverage-report
           path: coverage/
+          retention-days: 1
 
       - name: Audit dependencies
         if: inputs.audit-command != ''
@@ -147,20 +148,3 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: ${{ inputs.artifact-path }}
           retention-days: ${{ inputs.artifact-retention-days }}
-  
-  vitest-coverage-report:
-    needs: build
-    if: inputs.generate-vitest-coverage-report
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
-      - name: Download Vitest Coverage Results
-        uses: actions/download-artifact@v8
-        with:
-          name: vitest-coverage-report
-          path: coverage/
-
-      - name: Vitest coverage report
-        uses: davelosert/vitest-coverage-report-action@v2
