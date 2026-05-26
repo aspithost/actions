@@ -83,8 +83,6 @@ jobs:
 
     permissions:
       contents: read
-      # Required to put a comment in the PR by Vitest Coverage report
-      pull-requests: write
 
     steps:
       - name: Checkout
@@ -123,10 +121,13 @@ jobs:
       - name: Test
         if: inputs.test-command != ''
         run: ${{ inputs.test-command }}
-
-      - name: Vitest coverage report
+      
+      - name: Upload Vitest coverage report
         if: inputs.generate-vitest-coverage-report
-        uses:  davelosert/vitest-coverage-report-action@v2
+        uses: actions/upload-artifact@v7
+        with:
+          name: vitest-coverage-report
+          path: coverage/
 
       - name: Audit dependencies
         if: inputs.audit-command != ''
@@ -146,3 +147,20 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: ${{ inputs.artifact-path }}
           retention-days: ${{ inputs.artifact-retention-days }}
+  
+  vitest-coverage-report:
+    needs: build
+    if: inputs.generate-vitest-coverage-report
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Download Vitest Coverage Results
+        uses: actions/download-artifact@v8
+        with:
+          name: vitest-coverage-report
+          path: coverage/
+
+      - name: Vitest coverage report
+        uses: davelosert/vitest-coverage-report-action@v2
