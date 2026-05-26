@@ -5,8 +5,9 @@ on:
     inputs:
       package-path:
         description: The path to the package directory
-        required: true
+        required: false
         type: string
+        default: '.'
       node-version:
         description: Node.js version to use
         required: false
@@ -16,7 +17,7 @@ on:
         description: Name of the build artifact to download
         required: false
         type: string
-        default: ''
+        default: dist
       artifact-path:
         description: Path to download the artifact to
         required: false
