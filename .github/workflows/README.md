@@ -110,7 +110,7 @@ jobs:
 | Name | Description | Default |
 | --- | --- | --- |
 | `node-version` | Node.js version to use | `24` |
-| `run-dependency-review` | Run the dependency review action | `true` |
+| `run-dependency-review` | Run the dependency review action. If set to true, will only run on pull-requests | `true` |
 | `package-manager` | Package manager to use (`npm`, `pnpm`, `yarn`, or `bun`) | `npm` |
 | `build-command` | Command to run for building (skipped if empty) | `npm run build` |
 | `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
