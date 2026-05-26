@@ -11,7 +11,7 @@ Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and b
 5. Optionally runs the build (skipped if `build-command` is empty)
 6. Optionally runs linting (skipped if `lint-command` is empty)
 7. Optionally runs tests (skipped if `test-command` is empty)
-8. Optionally generates a Vitest coverage report
+8. Optionally uploads a Vitest coverage report artifact
 9. Optionally audits dependencies (skipped if `audit-command` is empty)
 10. Optionally runs a SonarQube scan
 11. Optionally uploads the build output as an artifact
@@ -53,7 +53,7 @@ jobs:
 
 With Vitest coverage report:
 
-NOTE: expects your Vitest config to contain `test.coverage.reporter: ['json-summary', 'json']` and `test.coveragereportOnFailure: true`.
+> **Note:** expects your Vitest config to contain `test.coverage.reporter: ['json-summary', 'json']` and `test.coverageReportOnFailure: true`. Use together with the [Vitest Coverage Report workflow](#vitest-coverage-report-workflow) to post the results as a PR comment.
 
 ```yaml
 jobs:
@@ -61,7 +61,13 @@ jobs:
     uses: aspithost/actions/.github/workflows/build-node.yml@v1
     with:
       test-command: npx vitest --coverage
-      generate-vitest-coverage-report: true
+      upload-vitest-coverage-report: true
+
+  vitest-coverage-report:
+    needs: build
+    uses: aspithost/actions/.github/workflows/vitest-coverage-report.yml@v1
+    permissions:
+      pull-requests: write
 ```
  
 With audit disabled:
@@ -109,7 +115,7 @@ jobs:
 | `build-command` | Command to run for building (skipped if empty) | `npm run build` |
 | `lint-command` | Command to run for linting (skipped if empty) | `npm run lint` |
 | `test-command` | Command to run tests (skipped if empty) | `''` |
-| `generate-vitest-coverage-report` | Generate a Vitest coverage report | `false` |
+| `upload-vitest-coverage-report` | Upload a Vitest coverage report artifact | `false` |
 | `audit-command` | Command to audit dependencies (skipped if empty) | `npm audit --audit-level=critical` |
 | `upload-artifact` | Upload the build output as an artifact | `false` |
 | `artifact-name` | Name of the uploaded artifact | `dist` |
@@ -124,6 +130,65 @@ jobs:
 | --- | --- | --- |
 | `sonar-token` | SonarQube authentication token | Only when `run-sonar: true` |
  
+---
+
+# Vitest Coverage Report Workflow
+
+Reusable workflow that downloads a Vitest coverage artifact and posts the results as a pull request comment. Intended to be used together with the [Build Node workflow](#build-node-workflow) when `upload-vitest-coverage-report` is enabled.
+
+## Steps
+
+1. Downloads the Vitest coverage artifact produced by the build job
+2. Posts the coverage results as a PR comment
+
+## Usage
+
+```yaml
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    uses: aspithost/actions/.github/workflows/build-node.yml@v1
+    with:
+      test-command: npx vitest --coverage
+      upload-vitest-coverage-report: true
+
+  vitest-coverage-report:
+    needs: build
+    uses: aspithost/actions/.github/workflows/vitest-coverage-report.yml@v1
+    permissions:
+      pull-requests: write
+```
+
+With a custom artifact name or path:
+
+```yaml
+jobs:
+  vitest-coverage-report:
+    needs: build
+    uses: aspithost/actions/.github/workflows/vitest-coverage-report.yml@v1
+    permissions:
+      pull-requests: write
+    with:
+      artifact-name: my-coverage-report
+      artifact-path: coverage
+```
+
+## Inputs
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `package-path` | Path to the package directory | `.` |
+| `artifact-name` | Name of the coverage artifact to download | `vitest-coverage-report` |
+| `artifact-path` | Path to download the artifact to | `coverage` |
+
+## Permissions
+
+Your calling workflow must declare `pull-requests: write`.
+
 ---
  
 # Release NPM Workflow
