@@ -17,7 +17,7 @@ runs:
       with:
         fetch-depth: 0
 
-    - uses: SonarSource/sonarqube-scan-action@v7
+    - uses: SonarSource/sonarqube-scan-action@v8
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
         SONAR_HOST_URL: ${{ inputs.sonar-host-url }}

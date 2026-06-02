@@ -1,0 +1,154 @@
+name: Node CI
+
+on:
+  workflow_call:
+    inputs:
+      run-dependency-review:
+        description: Boolean value to run a dependency review action (only valid on pull_request events)
+        required: false
+        type: boolean
+        default: true
+
+      node-version:
+        description: Node.js version to use
+        required: false
+        type: string
+        default: '24'
+      package-manager:
+        description: Package manager to use (npm, pnpm, yarn, or bun)
+        required: false
+        type: string
+        default: npm
+      build-command:
+        description: Command to run for building, one per line (skipped if empty)
+        required: false
+        type: string
+        default: npm run build
+      lint-command:
+        description: Command to run for linting, one per line (skipped if empty)
+        required: false
+        type: string
+        default: npm run lint
+      test-command:
+        description: Command to run tests, one per line (skipped if empty)
+        required: false
+        type: string
+        default: ''
+      audit-command:
+        description: Command to run for auditing dependencies, one per line (skipped if empty). Defaults to NPM audit
+        required: false
+        type: string
+        default: npm audit --audit-level=critical
+      upload-build:
+        description: Upload the dist folder as an artifact
+        required: false
+        type: boolean
+        default: false
+      build-artifact-name:
+        description: Name of the uploaded artifact
+        required: false
+        type: string
+        default: dist
+      build-artifact-path:
+        description: Path to upload as artifact
+        required: false
+        type: string
+        default: dist/
+      build-artifact-retention-days:
+        description: Number of days to retain the artifact
+        required: false
+        type: number
+        default: 1
+      upload-vitest-coverage-report:
+        description: Upload a Vitest coverage report
+        required: false
+        type: boolean
+        default: false
+      vitest-coverage-report-artifact-name:
+        description: Name of the uploaded artifact
+        required: false
+        type: string
+        default: dist
+      vitest-coverage-report-artifact-path:
+        description: Path to upload as artifact
+        required: false
+        type: string
+        default: dist/
+      vitest-coverage-report-artifact-retention-days:
+        description: Number of days to retain the artifact
+        required: false
+        type: number
+        default: 1
+
+      run-sonar:
+        description: Run SonarQube scan
+        required: false
+        type: boolean
+        default: false
+      sonar-host-url:
+        description: SonarQube host URL (omit for SonarCloud)
+        required: false
+        type: string
+        default: https://sonarcloud.io
+
+      working-directory:
+        description: The working directory to run commands in
+        required: false
+        type: string
+        default: '.'
+
+    secrets:
+      sonar-token:
+        description: SonarQube authentication token
+        required: false
+
+jobs:
+  dependency-review:
+    uses: aspithost/actions/github/dependency-review.yml@v2
+    if: inputs.run-dependency-review && github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+
+  build-node:
+    uses: aspithost/actions/.github/workflows/node-build.yml@v2
+    needs: dependency-review
+    if: always() && !failure() && !cancelled()
+    permissions:
+      contents: read
+    with:
+      node-version: ${{ inputs.node-version }}
+      package-manager: ${{ inputs.package-manager }}
+      build-command: ${{ inputs.build-command }}
+      lint-command: ${{ inputs.lint-command }}
+      test-command: ${{ inputs.test-command }}
+      audit-command: ${{ inputs.audit-command }}
+      upload-build: ${{ inputs.upload-build }}
+      build-artifact-name: ${{ inputs.build-artifact-name }}
+      build-artifact-path: ${{ inputs.build-artifact-path }}
+      build-artifact-retention-days: ${{ inputs.build-artifact-retention-days }}
+      upload-vitest-coverage-report: ${{ inputs.upload-vitest-coverage-report }}
+      vitest-coverage-report-artifact-name: ${{ inputs.vitest-coverage-report-artifact-name }}
+      vitest-coverage-report-artifact-path: ${{ inputs.vitest-coverage-report-artifact-path }}
+      vitest-coverage-report-artifact-retention-days: ${{ inputs.vitest-coverage-report-artifact-retention-days }}
+
+  sonar-scan:
+    runs-on: ubuntu-latest
+    if: inputs.run-sonar
+    steps:
+      - name: SonarQube scan
+        uses: aspithost/actions/sonar@v2
+        with:
+          sonar-token: ${{ secrets.sonar-token }}
+          sonar-host-url: ${{ inputs.sonar-host-url }}
+
+  vitest-coverage-report:
+    uses: aspithost/actions/vitest-coverage-report.yml@v2
+    needs: build-node
+    if: inputs.upload-vitest-coverage-report && github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    with:
+      artifact-name: ${{ inputs.vitest-coverage-report-artifact-name }}
+      working-directory: ${{ inputs.working-directory }}
+      artifact-path: ${{ inputs.vitest-coverage-report-artifact-path }}
