@@ -143,7 +143,7 @@ jobs:
           sonar-host-url: ${{ inputs.sonar-host-url }}
 
   vitest-coverage-report:
-    uses: aspithost/actions/vitest-coverage-report.yml@v2
+    uses: aspithost/actions/vitest-coverage-report@v2
     needs: build-node
     if: inputs.upload-vitest-coverage-report && github.event_name == 'pull_request'
     permissions:
