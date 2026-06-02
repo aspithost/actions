@@ -43,7 +43,7 @@ on:
         description: Upload the dist folder as an artifact
         required: false
         type: boolean
-        default: false
+        default: true
       build-artifact-name:
         description: Name of the uploaded artifact
         required: false
