@@ -62,12 +62,12 @@ on:
         description: Name of the uploaded artifact
         required: false
         type: string
-        default: dist
+        default: vitest-coverage-report
       vitest-coverage-report-artifact-path:
         description: Path to upload as artifact
         required: false
         type: string
-        default: dist/
+        default: coverage/
       vitest-coverage-report-artifact-retention-days:
         description: Number of days to retain the artifact
         required: false
