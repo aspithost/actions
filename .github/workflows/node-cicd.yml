@@ -106,6 +106,7 @@ jobs:
     uses: aspithost/actions/.github/workflows/node-ci.yml@v2
     permissions:
       contents: read
+      pull-requests: write
     with:
       run-dependency-review: ${{ inputs.run-dependency-review }}
       node-version: ${{ inputs.node-version }}
