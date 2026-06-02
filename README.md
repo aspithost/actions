@@ -2,37 +2,19 @@
 
 Reusable GitHub Actions workflows and composite actions.
 
-## Workflows
+### git/create-and-push-tag
 
-### Build Node
+Creates and pushes a git tag.
 
-Reusable workflow that builds a Node.js project. Supports npm, pnpm, yarn, and bun. See [workflow README](.github/workflows/README.md) for full input details.
+### git/create-and-push-rolling-tags
 
-```yaml
-jobs:
-  build:
-    uses: aspithost/actions/.github/workflows/build-node.yml@v1
-```
+Creates and force-pushes major and minor version tags from a semver tag (e.g. `v1.2.3` updates `v1` and `v1.2`).
 
-### Release NPM
+### github/dependency-review
 
-Publishes an npm package and creates a git tag, only when the local version differs from the published version. Uses npm trusted publishing (OIDC) — no access token required. See [workflow README](.github/workflows/README.md) for full input details.
+Runs a dependency review on pull requests
 
-```yaml
-permissions:
-  contents: write
-  id-token: write
-
-jobs:
-  release:
-    uses: aspithost/actions/.github/workflows/release-npm.yml@v1
-    with:
-      working-directory: ./my-package
-```
-
-## Actions
-
-### npm/get-local-package-information
+### node/get-local-package-information
 
 Reads `name` and `version` from a local `package.json`.
 
@@ -44,26 +26,10 @@ Fetches the currently published version of a package from the npm registry.
 
 Publishes an npm package with `--access public` and `--provenance` via trusted publishing.
 
-### git/create-and-push-tag
-
-Creates and pushes a git tag.
-
-### git/create-and-push-rolling-tags
-
-Creates and force-pushes major and minor version tags from a semver tag (e.g. `v1.2.3` updates `v1` and `v1.2`).
-
-### git/get-latest-semver-tag
-
-Retrieves the latest semver tag from the repository. Defaults to `v0.0.0` if none exist.
-
-### github/create-release
-
-Creates a GitHub release with auto-generated notes.
-
-### semver/bump
-
-Calculates the next semantic version based on a bump type (major, minor, or patch).
-
-### sonar-cloud
+### sonar
 
 Runs a SonarQube scan. Supports both SonarCloud and self-hosted SonarQube.
+
+### vitest-coverage-report
+
+Downloads a Vitest coverage artifact and uploads it as a pull request comment using [davelosert/vitest-coverage-report-action](https://github.com/davelosert/vitest-coverage-report-action).
