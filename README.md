@@ -27,7 +27,7 @@ jobs:
   release:
     uses: aspithost/actions/.github/workflows/release-npm.yml@v1
     with:
-      package-path: ./my-package
+      working-directory: ./my-package
 ```
 
 ## Actions

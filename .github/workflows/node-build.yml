@@ -8,11 +8,6 @@ on:
         required: false
         type: string
         default: '24'
-      run-dependency-review:
-        description: Boolean value to run a dependency review action (only valid on pull_request events)
-        required: false
-        type: boolean
-        default: true
       package-manager:
         description: Package manager to use (npm, pnpm, yarn, or bun)
         required: false
@@ -33,52 +28,54 @@ on:
         required: false
         type: string
         default: ''
-      upload-vitest-coverage-report:
-        description: Upload a Vitest coverage report
-        required: false
-        type: boolean
       audit-command:
         description: Command to run for auditing dependencies, one per line (skipped if empty). Defaults to NPM audit
         required: false
         type: string
         default: npm audit --audit-level=critical
-      upload-artifact:
+      upload-build:
         description: Upload the dist folder as an artifact
         required: false
         type: boolean
         default: false
-      artifact-name:
+      build-artifact-name:
         description: Name of the uploaded artifact
         required: false
         type: string
         default: dist
-      artifact-path:
+      build-artifact-path:
         description: Path to upload as artifact
         required: false
         type: string
         default: dist/
-      artifact-retention-days:
+      build-artifact-retention-days:
         description: Number of days to retain the artifact
         required: false
         type: number
         default: 1
-      run-sonar:
-        description: Run SonarQube scan
+      upload-vitest-coverage-report:
+        description: Upload a Vitest coverage report
         required: false
         type: boolean
         default: false
-      sonar-host-url:
-        description: SonarQube host URL (omit for SonarCloud)
+      vitest-coverage-report-artifact-name:
+        description: Name of the uploaded artifact
         required: false
         type: string
-        default: https://sonarcloud.io
-    secrets:
-      sonar-token:
-        description: SonarQube authentication token
+        default: dist
+      vitest-coverage-report-artifact-path:
+        description: Path to upload as artifact
         required: false
+        type: string
+        default: dist/
+      vitest-coverage-report-artifact-retention-days:
+        description: Number of days to retain the artifact
+        required: false
+        type: number
+        default: 1
 
 jobs:
-  build:
+  build-node:
     runs-on: ubuntu-latest
 
     permissions:
@@ -87,10 +84,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Dependency review
-        if: inputs.run-dependency-review && github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@v5
 
       - name: Setup pnpm
         if: inputs.package-manager == 'pnpm'
@@ -121,31 +114,25 @@ jobs:
       - name: Test
         if: inputs.test-command != ''
         run: ${{ inputs.test-command }}
-      
-      - name: Upload Vitest coverage report
-        if: inputs.upload-vitest-coverage-report
-        uses: actions/upload-artifact@v7
-        with:
-          name: vitest-coverage-report
-          path: coverage/
-          retention-days: 1
 
       - name: Audit dependencies
         if: inputs.audit-command != ''
         run: ${{ inputs.audit-command }}
 
-      - name: SonarQube Scan
-        if: inputs.run-sonar
-        uses: aspithost/actions/sonar@v1
-        with:
-          sonar-token: ${{ secrets.sonar-token }}
-          sonar-host-url: ${{ inputs.sonar-host-url }}
-
-      - name: Upload dist
-        if: inputs.upload-artifact
+      - name: Upload build
+        if: inputs.upload-build
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.artifact-path }}
-          retention-days: ${{ inputs.artifact-retention-days }}
+          name: ${{ inputs.build-artifact-name }}
+          path: ${{ inputs.build-artifact-path }}
+          retention-days: ${{ inputs.build-artifact-retention-days }}
+          if-no-files-found: error
+
+      - name: Upload Vitest coverage report
+        if: inputs.upload-vitest-coverage-report
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.vitest-coverage-report-artifact-name }}
+          path: ${{ inputs.vitest-coverage-report-artifact-path }}
+          retention-days: ${{ inputs.vitest-coverage-report-artifact-retention-days }}
           if-no-files-found: error

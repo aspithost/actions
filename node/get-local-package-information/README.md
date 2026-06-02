@@ -18,8 +18,8 @@ Reads the `name` and `version` fields from a local `package.json` file.
 ## Usage
 
 ```yaml
-- uses: ./npm/get-local-package-information
-  id: pkg
+- uses: ./node/get-local-package-information
+  id: id-of-outputs
   with:
     working-directory: ./my-package
 
