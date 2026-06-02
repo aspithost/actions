@@ -104,7 +104,7 @@ on:
 
 jobs:
   dependency-review:
-    uses: aspithost/actions/github/dependency-review.yml@v2
+    uses: aspithost/actions/github/dependency-review@v2
     if: inputs.run-dependency-review && github.event_name == 'pull_request'
     permissions:
       contents: read
