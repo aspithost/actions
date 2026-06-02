@@ -104,11 +104,14 @@ on:
 
 jobs:
   dependency-review:
-    uses: aspithost/actions/github/dependency-review@v2
+    runs-on: ubuntu-latest
     if: inputs.run-dependency-review && github.event_name == 'pull_request'
     permissions:
       contents: read
       pull-requests: write
+    steps:
+      - name: Dependency Review
+        uses: aspithost/actions/github/dependency-review@v2
 
   build-node:
     uses: aspithost/actions/.github/workflows/node-build.yml@v2
