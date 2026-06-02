@@ -146,12 +146,15 @@ jobs:
           sonar-host-url: ${{ inputs.sonar-host-url }}
 
   vitest-coverage-report:
-    uses: aspithost/actions/vitest-coverage-report@v2
+    runs-on: ubuntu-latest
     needs: build-node
     if: inputs.upload-vitest-coverage-report && github.event_name == 'pull_request'
     permissions:
       pull-requests: write
-    with:
-      artifact-name: ${{ inputs.vitest-coverage-report-artifact-name }}
-      working-directory: ${{ inputs.working-directory }}
-      artifact-path: ${{ inputs.vitest-coverage-report-artifact-path }}
+    steps:
+      - name: Upload Vitest coverage report
+        uses: aspithost/actions/vitest-coverage-report@v2
+        with:
+          artifact-name: ${{ inputs.vitest-coverage-report-artifact-name }}
+          working-directory: ${{ inputs.working-directory }}
+          artifact-path: ${{ inputs.vitest-coverage-report-artifact-path }}
