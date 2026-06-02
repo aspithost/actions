@@ -107,6 +107,8 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    secrets:
+      sonar-token: ${{ secrets.sonar-token }}
     with:
       run-dependency-review: ${{ inputs.run-dependency-review }}
       node-version: ${{ inputs.node-version }}
