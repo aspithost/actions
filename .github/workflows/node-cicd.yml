@@ -130,6 +130,8 @@ jobs:
       sonar-host-url: ${{ inputs.sonar-host-url }}
 
       working-directory: ${{ inputs.working-directory }}
+    secrets:
+      sonar-token: ${{ secrets.sonar-token }}
 
   cd:
     uses: aspithost/actions/.github/workflows/node-release.yml@v2
