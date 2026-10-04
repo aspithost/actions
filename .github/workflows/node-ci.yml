@@ -143,8 +143,11 @@ jobs:
       - name: SonarQube scan
         uses: aspithost/actions/sonar@v2
         with:
+          artifact-name: ${{ inputs.vitest-coverage-report-artifact-name }}
+          artifact-path: ${{ inputs.vitest-coverage-report-artifact-path }}
           sonar-token: ${{ secrets.sonar-token }}
           sonar-host-url: ${{ inputs.sonar-host-url }}
+          working-directory: ${{ inputs.working-directory }}
 
   vitest-coverage-report:
     runs-on: ubuntu-latest

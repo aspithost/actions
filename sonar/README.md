@@ -1,40 +1,60 @@
 # SonarQube scan
 
-Runs a SonarQube scan using the [SonarSource/sonarqube-scan-action](https://github.com/SonarSource/sonarqube-scan-action).
+Runs a SonarQube scan with [SonarSource/sonarqube-scan-action](https://github.com/SonarSource/sonarqube-scan-action). The action downloads an LCOV coverage artifact before the scan.
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |---|---|---|---|
 | `sonar-token` | Yes | SonarQube authentication token | — |
-| `sonar-host-url` | No | SonarQube host URL | `https://sonarcloud.io` |
+| `artifact-name` | No | Name of the uploaded artifact that contains LCOV coverage data | `coverage` |
+| `artifact-path` | No | Relative destination for the downloaded artifact and LCOV report lookup | `coverage/` |
+| `sonar-host-url` | No | SonarQube server URL | `https://sonarcloud.io` |
+| `working-directory` | No | Directory prefix for artifact download and LCOV report lookup; does not change the Sonar scan root | `.` |
 
 ## Usage
 
-**SonarCloud**
+Upload the coverage artifact in an earlier job in the same workflow run. The artifact must contain `lcov.info` at its root.
+
 ```yaml
-- uses: aspithost/actions/github/sonarqube-scan.yml@v2
-  with:
-    sonar-token: ${{ secrets.SONAR_TOKEN }}
-  permissions:
-    contents: read
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: aspithost/actions/sonar@v2
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
 
-**Self-hosted SonarQube**
+For a self-hosted SonarQube server or non-default artifact location:
+
 ```yaml
-- uses: aspithost/actions/github/sonarqube-scan.yml@v2
-  with:
-    sonar-token: ${{ secrets.SONAR_TOKEN }}
-    sonar-host-url: https://sonar.mycompany.com
-  permissions:
-    contents: read
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: aspithost/actions/sonar@v2
+        with:
+          artifact-name: my-app-coverage
+          artifact-path: reports
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-host-url: https://sonar.mycompany.com
+          working-directory: packages/my-app
 ```
+
+With those paths, the action expects the downloaded report at `packages/my-app/reports/lcov.info`.
 
 ## Permissions
 
-- `contents: read` — to check out the repository with full history (`fetch-depth: 0`)
+- `contents: read` — lets the checkout fetch the repository and its full history.
 
 ## Notes
 
-- You need a `sonar-project.properties` file in the root of your repository to configure the scan (project key, sources, etc.)
-- The checkout uses `fetch-depth: 0` to give SonarQube access to the full git history, which is required for accurate blame and new code detection.
+- Upload the artifact before this action runs, and use the same workflow run for both jobs.
+- Place `lcov.info` at the root of the uploaded artifact. The action passes its downloaded path to SonarQube as `sonar.javascript.lcov.reportPaths`.
+- Add `sonar-project.properties` at the repository root for project settings such as the project key and source paths.
+- The action checks out the repository with `fetch-depth: 0`, which gives SonarQube full git history for blame and new-code detection.
