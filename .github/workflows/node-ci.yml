@@ -68,7 +68,7 @@ on:
         description: Name of the uploaded artifact
         required: false
         type: string
-        default: vitest-coverage-report
+        default: coverage
       vitest-coverage-report-artifact-path:
         description: Path to upload as artifact
         required: false

@@ -9,11 +9,11 @@ inputs:
   artifact-name:
     description: Name of the build artifact to download
     required: false
-    default: vitest-coverage-report
+    default: coverage
   artifact-path:
     description: Path of the build artifact to download
     required: false
-    default: coverage
+    default: coverage/
 
 runs:
   using: composite
