@@ -1,6 +1,6 @@
 # SonarQube scan
 
-Runs a SonarQube scan with [SonarSource/sonarqube-scan-action](https://github.com/SonarSource/sonarqube-scan-action). The action downloads an LCOV coverage artifact before the scan.
+Runs a SonarQube scan with [SonarSource/sonarqube-scan-action](https://github.com/SonarSource/sonarqube-scan-action). The action attempts to download an LCOV coverage artifact before the scan; if the download fails, the scan still runs without the downloaded coverage report.
 
 ## Inputs
 
@@ -55,6 +55,7 @@ With those paths, the action expects the downloaded report at `packages/my-app/r
 ## Notes
 
 - Upload the artifact before this action runs, and use the same workflow run for both jobs.
+- The coverage artifact download uses `continue-on-error`, so a missing or unavailable artifact does not prevent the SonarQube scan from running. Coverage will not be available to the scan in that case.
 - Place `lcov.info` at the root of the uploaded artifact. The action passes its downloaded path to SonarQube as `sonar.javascript.lcov.reportPaths`.
 - Add `sonar-project.properties` at the repository root for project settings such as the project key and source paths.
 - The action checks out the repository with `fetch-depth: 0`, which gives SonarQube full git history for blame and new-code detection.
