@@ -42,4 +42,4 @@ runs:
         SONAR_HOST_URL: ${{ inputs.sonar-host-url }}
       with:
         args: >
-          -Dsonar.javascript.lcov.reportPaths=${{ inputs.working-directory }}/${{ inputs.artifact-path }}/lcov.info
+          -Dsonar.javascript.lcov.reportPaths=${{ inputs.working-directory }}/${{ inputs.artifact-path }}lcov.info
