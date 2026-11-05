@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: aspithost/actions/sonar@v2
+      - uses: aspithost/actions/sonar@v3
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
@@ -37,7 +37,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: aspithost/actions/sonar@v2
+      - uses: aspithost/actions/sonar@v3
         with:
           artifact-name: my-app-coverage
           artifact-path: reports
