@@ -13,7 +13,7 @@ Downloads a Vitest coverage artifact and uploads it as a pull request comment us
 ## Usage
 
 ```yaml
-- uses: aspithost/actions/github/vitest-coverage-report.yml@v2
+- uses: aspithost/actions/github/vitest-coverage-report.yml@v3
   if: github.event_name == 'pull_request'
   permissions:
     contents: read
@@ -23,7 +23,7 @@ Downloads a Vitest coverage artifact and uploads it as a pull request comment us
 With a custom artifact name or working directory:
 
 ```yaml
-- uses: aspithost/actions/github/vitest-coverage-report.yml@v2
+- uses: aspithost/actions/github/vitest-coverage-report.yml@v3
   if: github.event_name == 'pull_request'
   with:
     working-directory: packages/my-app

@@ -30,11 +30,11 @@ jobs:
         run: echo "name=v$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
-        uses: ./git/create-and-push-tag@v3
+        uses: aspithost/actions/git/create-and-push-tag@v3
         with:
           tag: ${{ steps.tag.outputs.name }}
 
       - name: Create and push rolling tags
-        uses: ./git/create-and-push-rolling-tags@v3
+        uses: aspithost/actions/git/create-and-push-rolling-tags@v3
         with:
           tag: ${{ steps.tag.outputs.name }}
