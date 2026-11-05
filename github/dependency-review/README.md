@@ -11,7 +11,7 @@ Runs a dependency review on pull requests using the [actions/dependency-review-a
 ## Usage
 
 ```yaml
-- uses: aspithost/actions/github/dependency-review.yml@v2
+- uses: aspithost/actions/github/dependency-review.yml@v3
   if: github.event_name == 'pull_request'
   permissions:
     contents: read
