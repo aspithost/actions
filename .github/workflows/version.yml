@@ -25,7 +25,7 @@ jobs:
       
       - name: Get local package.json version
         id: package-json-version
-        uses: aspithost/actions/node/get-local-package-information@v3
+        uses: ./node/get-local-package-information  
         with:
           working-directory: '.'
 
@@ -36,11 +36,11 @@ jobs:
         run: echo "name=v$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
-        uses: aspithost/actions/git/create-and-push-tag@v3
+        uses: ./git/create-and-push-tag
         with:
           tag: ${{ steps.tag.outputs.name }}
 
       - name: Create and push rolling tags
-        uses: aspithost/actions/git/create-and-push-rolling-tags@v3
+        uses: ./git/create-and-push-rolling-tags
         with:
           tag: ${{ steps.tag.outputs.name }}
