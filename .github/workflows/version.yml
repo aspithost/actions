@@ -1,9 +1,15 @@
-# Used to version this repository
+# Note: internal use only. Used to version this repository
 name: Version
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag-name:
+        description: New semver tag name
+        required: true
+        type: string
 
 jobs:
   release:
