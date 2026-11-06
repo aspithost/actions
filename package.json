@@ -1,0 +1,30 @@
+{
+  "name": "aspithost/actions",
+  "version": "3.0.0",
+  "description": "A collection of Github actions and workflows",
+  "keywords": [
+    "github-actions",
+    "actions",
+    "ci",
+    "cd",
+    "ci-cd"
+  ],
+  "license": "ISC",
+  "author": {
+    "name": "Abel Spithost",
+    "url": "https://github.com/aspithost"
+  },
+  "homepage": "https://github.com/aspithost/actions#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aspithost/actions.git"
+  },
+  "devDependencies": {
+    "@abelspithost/commitlint": "^0.2.0",
+    "@commitlint/cli": "^21.2.4",
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}

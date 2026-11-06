@@ -18,7 +18,7 @@ Publishes an npm package to the npm registry using GitHub Actions OIDC (trusted 
 Example workflow snippet that sets up Node and publishes the package using this action.
 
 ```yaml
-- uses: actions/setup-node@v6
+- uses: actions/setup-node@v7
   with:
     registry-url: https://registry.npmjs.org
 

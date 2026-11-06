@@ -1,12 +1,13 @@
 # Create and Push Tag
 
-Creates and pushes a git tag to the remote.
+Creates and pushes an annotated git tag to the remote.
 
 ## Inputs
 
 | Name | Description | Required |
 | --- | --- | --- |
 | `tag` | The tag name to create | Yes |
+| `message` | The tag message. Defaults to `Release <tag>`. | No |
 
 ## Usage
 
@@ -14,7 +15,10 @@ Creates and pushes a git tag to the remote.
 - uses: ./git/create-and-push-tag
   with:
     tag: '@scope/my-package@1.0.0'
+    message: 'Release my-package 1.0.0'
 ```
+
+If `message` is omitted or empty, the tag message defaults to `Release <tag>`.
 
 ## Permissions
 

@@ -1,7 +1,9 @@
-# Used to version this repository
+# Note: internal use only. Used to version this repository
 name: Version
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       tag-name:
@@ -19,14 +21,26 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
+      
+      - name: Get local package.json version
+        id: package-json-version
+        uses: aspithost/actions/node/get-local-package-information@v3
+        with:
+          working-directory: '.'
+
+      - name: Format git tag
+        id: tag
+        env:
+          VERSION: ${{ steps.package-json-version.outputs.version }}
+        run: echo "name=v$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
-        uses: ./git/create-and-push-tag
+        uses: aspithost/actions/git/create-and-push-tag@v3
         with:
-          tag: ${{ inputs.tag-name }}
+          tag: ${{ steps.tag.outputs.name }}
 
       - name: Create and push rolling tags
-        uses: ./git/create-and-push-rolling-tags
+        uses: aspithost/actions/git/create-and-push-rolling-tags@v3
         with:
-          tag: ${{ inputs.tag-name }}
+          tag: ${{ steps.tag.outputs.name }}

@@ -1,4 +1,4 @@
-# Only supports releases to NPM at the moment
+# Only supports releases to NPM
 name: Release a node package, publish to NPM, and create & push a git tag
 
 on:
@@ -8,9 +8,14 @@ on:
         description: Node.js version to use
         required: false
         type: string
-        default: '24'
+        default: '26'
       artifact-name:
         description: Name of the build artifact to download
+        required: false
+        type: string
+        default: dist
+      artifact-path:
+        description: Path to download the artifact to
         required: false
         type: string
         default: dist
@@ -19,11 +24,6 @@ on:
         required: false
         type: string
         default: '.'
-      artifact-path:
-        description: Path to download the artifact to
-        required: false
-        type: string
-        default: dist
 
 jobs:
   release:
@@ -36,23 +36,23 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Get local package information
         id: local
-        uses: aspithost/actions/node/get-local-package-information@v2
+        uses: aspithost/actions/node/get-local-package-information@v3
         with:
           working-directory: ${{ inputs.working-directory }}
 
       - name: Get remote package version
         id: remote
-        uses: aspithost/actions/npm/get-remote-package-version@v2
+        uses: aspithost/actions/npm/get-remote-package-version@v3
         with:
           package-name: ${{ steps.local.outputs.name }}
 
       - name: Setup Node
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ inputs.node-version }}
 
@@ -65,12 +65,12 @@ jobs:
 
       - name: Publish package
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/npm/publish@v2
+        uses: aspithost/actions/npm/publish@v3
         with:
           working-directory: ${{ inputs.working-directory }}
 
       - name: Create and push tag
         if: steps.local.outputs.version != steps.remote.outputs.version
-        uses: aspithost/actions/git/create-and-push-tag@v2
+        uses: aspithost/actions/git/create-and-push-tag@v3
         with:
           tag: ${{ steps.local.outputs.name }}@${{ steps.local.outputs.version }}

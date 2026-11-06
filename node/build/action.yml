@@ -1,0 +1,117 @@
+name: Build Node
+description: Builds a Node.js project with NPM. Install dependencies, then build, lint, test, audit and optionally uploads an artifact
+
+inputs:
+  node-version:
+    description: Node.js version to use
+    required: false
+    default: '26'
+  working-directory:
+    description: The working directory to run commands in (for monorepos)
+    required: false
+    default: '.'
+  build-command:
+    description: Command to run for building, one per line (skipped if empty)
+    required: false
+    default: npm run build
+  lint-command:
+    description: Command to run for linting, one per line (skipped if empty)
+    required: false
+    default: npm run lint
+  test-command:
+    description: Command to run tests, one per line (skipped if empty)
+    required: false
+    default: ''
+  audit-command:
+    description: Command to run for auditing dependencies, one per line (skipped if empty). Defaults to NPM audit
+    required: false
+    default: npm audit --audit-level=critical
+  upload-build:
+    description: Upload the build output as an artifact ('true' or 'false')
+    required: false
+    default: 'false'
+  build-artifact-name:
+    description: Name of the uploaded artifact
+    required: false
+    default: dist
+  build-artifact-path:
+    description: Path to upload as artifact (relative to the repository root, not working-directory)
+    required: false
+    default: dist/
+  build-artifact-retention-days:
+    description: Number of days to retain the artifact
+    required: false
+    default: '1'
+  upload-coverage-report:
+    description: Upload a coverage report ('true' or 'false')
+    required: false
+    default: 'false'
+  coverage-report-artifact-name:
+    description: Name of the uploaded artifact
+    required: false
+    default: coverage
+  coverage-report-artifact-path:
+    description: Path to upload as artifact (relative to the repository root, not working-directory)
+    required: false
+    default: coverage/
+  coverage-report-artifact-retention-days:
+    description: Number of days to retain the artifact
+    required: false
+    default: '1'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+
+    - name: Build
+      if: inputs.build-command != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.build-command }}
+
+    - name: Lint
+      if: inputs.lint-command != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.lint-command }}
+
+    - name: Test
+      if: inputs.test-command != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.test-command }}
+
+    - name: Audit dependencies
+      if: inputs.audit-command != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.audit-command }}
+
+    - name: Upload build
+      if: inputs.upload-build == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.build-artifact-name }}
+        path: ${{ inputs.build-artifact-path }}
+        retention-days: ${{ inputs.build-artifact-retention-days }}
+        if-no-files-found: error
+
+    - name: Upload coverage report
+      if: inputs.upload-coverage-report == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.coverage-report-artifact-name }}
+        path: ${{ inputs.coverage-report-artifact-path }}
+        retention-days: ${{ inputs.coverage-report-artifact-retention-days }}
+        if-no-files-found: error

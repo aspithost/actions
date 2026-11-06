@@ -1,18 +1,26 @@
 name: Create tag
-description: Creates and pushes a git tag
+description: Creates and pushes an annotated git tag
 
 inputs:
   tag:
     description: The tag name to create
     required: true
+  message:
+    description: Tag message. Defaults to "Release <tag>".
+    required: false
+    default: ''
 
 runs:
   using: composite
   steps:
-    - name: Create and push tag
+    - name: Create and push annotated tag
       shell: bash
       env:
         TAG: ${{ inputs.tag }}
+        MESSAGE: ${{ inputs.message }}
+        GIT_COMMITTER_NAME: github-actions[bot]
+        GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
       run: |
-        git tag "$TAG"
-        git push origin "$TAG"
+        set -euo pipefail
+        git tag --annotate "$TAG" --message "${MESSAGE:-Release $TAG}"
+        git push origin "refs/tags/$TAG"
