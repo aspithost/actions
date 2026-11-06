@@ -1,6 +1,6 @@
 {
   "name": "aspithost/actions",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A collection of Github actions and workflows",
   "keywords": [
     "github-actions",
