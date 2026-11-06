@@ -18,12 +18,14 @@ Call these reusable workflows from a job with `uses:`. Each workflow lives in [.
 
 ### node-ci
 
-Runs on pull requests and pushes. Jobs:
+The calling workflow selects the events. Jobs:
 
-1. `dependency-review` runs on pull requests when `run-dependency-review` equals `true`.
-2. `build-node` runs [node/build](node/build/README.md).
-3. `sonar-scan` runs [sonar](sonar/README.md) when `run-sonar` equals `true`.
-4. `vitest-coverage-report` runs [vitest-coverage-report](vitest-coverage-report/README.md) when `upload-coverage-report` equals `true`.
+1. `dependency-review` checks out the repository and reviews dependencies on pull requests when `run-dependency-review` equals `true`.
+2. `build-node` checks out the repository and runs [node/build](node/build/README.md) when dependency review succeeds or skips.
+3. `sonar-scan` checks out the full history and runs [sonar](sonar/README.md) after a successful build when `run-sonar` equals `true`.
+4. `vitest-coverage-report` runs [vitest-coverage-report](vitest-coverage-report/README.md) after a successful build when `upload-coverage-report` equals `true`. This condition also applies to non-pull-request events.
+
+The workflow skips downstream jobs after cancellation. The build requires a `package-lock.json` in `working-directory`; it defaults to Node.js 26 and skips tests unless you set `test-command`.
 
 ```yaml
 jobs:
