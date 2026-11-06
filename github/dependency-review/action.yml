@@ -10,9 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v7
-
     - name: Dependency review
       uses: actions/dependency-review-action@v5
       with:

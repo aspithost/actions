@@ -35,7 +35,7 @@ This action installs dependencies, then builds, lints, tests, and audits a Node.
 ## Usage
 
 ```yaml
-- uses: actions/checkout@v6
+- uses: actions/checkout@v7
 
 - uses: aspithost/actions/node/build@v3
 ```

@@ -23,6 +23,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: aspithost/actions/sonar@v3
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
@@ -37,10 +40,13 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: aspithost/actions/sonar@v3
         with:
           artifact-name: my-app-coverage
-          artifact-path: reports
+          artifact-path: reports/
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           sonar-host-url: https://sonar.mycompany.com
           working-directory: packages/my-app
@@ -48,9 +54,6 @@ jobs:
 
 With those paths, the action expects the downloaded report at `packages/my-app/reports/lcov.info`.
 
-## Permissions
-
-- `contents: read` — lets the checkout fetch the repository and its full history.
 
 ## Notes
 
@@ -58,4 +61,4 @@ With those paths, the action expects the downloaded report at `packages/my-app/r
 - The coverage artifact download uses `continue-on-error`, so a missing or unavailable artifact does not prevent the SonarQube scan from running. Coverage will not be available to the scan in that case.
 - Place `lcov.info` at the root of the uploaded artifact. The action passes its downloaded path to SonarQube as `sonar.javascript.lcov.reportPaths`.
 - Add `sonar-project.properties` at the repository root for project settings such as the project key and source paths.
-- The action checks out the repository with `fetch-depth: 0`, which gives SonarQube full git history for blame and new-code detection.
+- Check out the repository before running this action. Set `fetch-depth: 0` to give SonarQube full git history for blame and new-code detection.

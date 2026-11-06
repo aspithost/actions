@@ -11,11 +11,16 @@ Runs a dependency review on pull requests using the [actions/dependency-review-a
 ## Usage
 
 ```yaml
-- uses: aspithost/actions/github/dependency-review.yml@v3
-  if: github.event_name == 'pull_request'
-  permissions:
-    contents: read
-    pull-requests: write
+jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aspithost/actions/github/dependency-review@v3
 ```
 
 ## Permissions
@@ -25,5 +30,6 @@ Runs a dependency review on pull requests using the [actions/dependency-review-a
 
 ## Notes
 
+- Check out the repository before running this action.
 - This action only needs to run on `pull_request` events.
 - Set `comment-summary-in-pr: never` to disable PR comments if you don't need them.
